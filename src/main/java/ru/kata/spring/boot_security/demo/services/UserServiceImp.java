@@ -48,16 +48,12 @@ public class UserServiceImp implements UserService, UserDetailsService {
     public User updateUserById(Long id, User user) {
         User updateUser = getUserById(id);
         if (!user.getFirstName().isBlank() && !user.getLastName().isBlank() && !user.getPassword().isBlank() && !user.getEmail().isBlank() && user.getAge() > 0) {
-            if (getByEmail(user.getEmail()) == null) {
-                    String encodedPassword = new BCryptPasswordEncoder(12).encode(user.getPassword());
-                    user.setPassword(encodedPassword);
-                    return userRepository.save(user);
-            } else if (user.getEmail().equals(updateUser.getEmail())) {
+            if ((getByEmail(user.getEmail()) == null) || (user.getEmail().equals(updateUser.getEmail()))) {
                 String encodedPassword = new BCryptPasswordEncoder(12).encode(user.getPassword());
                 user.setPassword(encodedPassword);
                 return userRepository.save(user);
             }
-            }
+        }
         return null;
     }
     @Override
